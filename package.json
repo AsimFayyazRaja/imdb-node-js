@@ -1,0 +1,31 @@
+{
+  "name": "imdb",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.3",
+    "db": "^1.0.6",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.3",
+    "express-validator": "^3.2.0",
+    "handlebars": "^4.0.10",
+    "handlebars-layouts": "^3.1.4",
+    "hapi": "^16.4.3",
+    "hbs": "~4.0.1",
+    "mongo": "^0.1.0",
+    "mongodb": "^1.4.40",
+    "mongoose": "^4.10.5",
+    "morgan": "~1.8.1",
+    "passport": "^0.3.2",
+    "querystring": "^0.2.0",
+    "serve-favicon": "~2.4.2",
+    "string": "^3.3.3"
+  }
+}

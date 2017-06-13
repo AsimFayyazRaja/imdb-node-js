@@ -1,0 +1,35 @@
+<h1>{{title}}</h1>
+<p><b>Welcome to {{title}}</b></p>
+
+<p> welcome {{name}}</p>
+
+{{# each array_movies}}
+
+<div class="row">
+{{# if this.image}}
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="{{this.image}}" alt="...">
+      <div class="caption">
+        <h3>"{{this.title}}"</h3>
+        <p class="description">"{{this.description}}"</p>
+       <div class="price">"{{this.year}}"</div>
+        <p> <a href="" class="btn btn-default pull-right" role="button" id="b1">Rating: {{this.avg}}</a></p>
+        <p> <a href="/rate-movie{{this.id}}" class="btn btn-default pull-left" role="button" id="b1">Rate</a></p>   
+  <p> <a href="/{{this.title}}" class="btn btn-default" role="button" id="b1">Add to Wishlist</a></p>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
+{{/each}}
+
+<script src="http://code.jquery.com/jquery-latest.min.js" ></script>
+<script>
+/*$(function() {
+    $('input[type="button"]').click(function()
+    { 
+      alert('You clicked button with ID:' + this.id);
+    });
+})*/
+  </script>
