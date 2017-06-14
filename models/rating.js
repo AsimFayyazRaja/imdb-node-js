@@ -7,12 +7,8 @@ var Schema = mongoose.Schema;
 var schema= new Schema(
     {
     stars:{type: Number, required: true},
-    movieid:[
-      {type: Schema.Types.ObjectId, ref: 'movies'}
-    ],
-    userid:[
-      {type: Schema.Types.ObjectId, ref: 'users'}
-    ] 
+    moviename:{type: String, require: true},
+    username:{type: String, require: true}
 });
 
 

@@ -38,7 +38,7 @@ mongo.connect(url,function(err, db){
 assert.equal(null, err);
 
 console.log("aao rate karien");
-var Movieid=req.params.idm;
+var Movieid=req.params.idm.toString();
 console.log(Movieid);
 var name=req.session.user;
 console.log(req.body.rating);
@@ -55,9 +55,10 @@ if(docs==null)
 else
 {
 uid=docs._id.toString();
+uid=req.session.user;
 new rate({
-            movieid: Movieid,
-            userid: uid,
+            moviename: Movieid,
+            username: uid,
             stars: req.body.rating
         }).save(function(err,doc){
             if(err)
@@ -91,7 +92,7 @@ router.get('/rate-movie:idm', function(req,res,next)
     console.log(name);
    console.log(movieid);
     console.log("aagya kabu");
-    Movies.findOne({'_id':movieid},function(err,docs){
+    Movies.findOne({'title':movieid},function(err,docs){
         if(err)
         throw(err);
         movie.description=docs.description;
@@ -100,7 +101,7 @@ router.get('/rate-movie:idm', function(req,res,next)
         movie.id=(docs._id).toString();
         movie.image=docs.image;
     rate.aggregate([        //getting avg rating of eah movie
-        {$group: { _id: "$movieid", avg: { $avg: '$stars' } } }
+        {$group: { _id: "$moviename", avg: { $avg: '$stars' } } }
         ], function(err, result) {
             if(err)
             throw(err);
@@ -146,13 +147,14 @@ Movies.find(function(err,docs)
     }
   
   rate.aggregate([        //getting avg rating of eah movie
-        {$group: { _id: "$movieid", avg: { $avg: '$stars' } } }
+        {$group: { _id: "$moviename", avg: { $avg: '$stars' } } }
         ], function(err, result) {
             if(err)
             throw(err);
             //console.log(result);
             //res.render('index', {title: 'Imdb',docs1,name,result});
             //db.close();
+console.log(result);
 var avg=[];
 for(var o=0;o<result.length;o++)
 {
@@ -160,7 +162,7 @@ for(var o=0;o<result.length;o++)
     {
         console.log((result[o]._id).toString());
         console.log(array_movies[m].id);
-        if((result[o]._id).toString()==array_movies[m].id)
+        if((result[o]._id).toString()==array_movies[m].title)
         {
             console.log("aaa");
             array_movies[m].avg=result[o].avg;
@@ -184,6 +186,8 @@ for(var o=0;o<result.length;o++)
     });
         });
 });
+
+
 
 router.get('/:idm', function(req,res,next){
 var name=req.session.user;

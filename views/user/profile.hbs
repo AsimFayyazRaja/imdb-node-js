@@ -1,0 +1,41 @@
+
+<script src="http://code.jquery.com/jquery-latest.min.js" ></script>
+
+<h1>{{title}}</h1>
+<p><b>Welcome to {{title}}</b></p>
+
+<p> welcome {{name}}</p>
+<br>
+<p>You rated these movies</p>
+{{# each data}}
+{{# each this}}
+{{# if this.stars}}
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <div class="caption">
+        <h3>"{{this.moviename}}"</h3>
+        <p class="description">"{{this.stars}}"</p>
+      </div>
+    </div>
+    {{/if}}
+    {{/ each}}
+  </div>
+  {{/each}}
+
+  <br>
+<p>Your watchlist movies are</p>
+{{# each data2}}
+{{# each this}}
+{{# if this.moviename}}
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <div class="caption">
+        <h3>"{{this.moviename}}"</h3>
+      </div>
+    </div>
+    {{/if}}
+    {{/ each}}
+  </div>
+  {{/each}}
