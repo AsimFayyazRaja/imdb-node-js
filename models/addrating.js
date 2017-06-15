@@ -17,7 +17,7 @@ var Rate= [
 
 new rate({
     //image: 'http://68.media.tumblr.com/41a0e3c8a338244ebfe5b7a2615b23cc/tumblr_mg7w8tvyN51ryu4tko1_500.jpg',
-    moviename: 'Shawshank Redemption',
+    movieid: 'Shawshank Redemption',
     //description: "A masterclass from Morgan Freeman. THE BEST MOVIE EVER.",
     //year: 1996
     username:'as',
@@ -25,7 +25,7 @@ new rate({
 }),
 new rate({
     //image: 'http://68.media.tumblr.com/41a0e3c8a338244ebfe5b7a2615b23cc/tumblr_mg7w8tvyN51ryu4tko1_500.jpg',
-    moviename: 'Shawshank Redemption',
+    movieid: 'Shawshank Redemption',
     //description: "A masterclass from Morgan Freeman. THE BEST MOVIE EVER.",
     //year: 1996
     username:'as',

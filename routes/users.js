@@ -16,6 +16,7 @@ var Movies=require('../models/movies');
 var prep=require('./prepare');
 var Watchlist=require('../models/watchlist');
 var rate=require('../models/rating');
+var prep=require('./prepare');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 //parses input fields from the form
 router.get('/signup',urlencodedParser,function (req, res, next) {
@@ -28,13 +29,24 @@ var done=false;
 
 var url='mongodb://localhost:27017/imdb';
 
-mongo.connect(url,function(err, db){
-assert.equal(null, err);
 var userrate=[];
 
+
+router.get('/logout',function(req,res,next){
+req.session.user="";
+req.session.password="";
+
+prep.f2(req,res,next);
+});
+
+
 router.get('/profile',function(req,res,next){
+    name=req.session.user;
 console.log("user ko profile dikhaoji");
 console.log(name);
+mongo.connect(url,function(err, db){
+assert.equal(null, err);
+
 Users.findOne({'email':name},function(err,docs)
 {
 if(err) throw(err);
@@ -43,13 +55,14 @@ var id=docs._id.toString();
 rate.find({'username':name},function(err,data){
 if(err) throw(err);
 console.log(data);
+console.log("watchlist");
 //res.render('user/profile',{data,name});
 //console.log(userrate);
 
-Watchlist.find({'username':name},function(err,data2){
+Watchlist.find({'username':name},function(err,docs){
 if(err) throw(err);
-console.log(data2);
-res.render('user/profile',{data,name,data2});
+console.log(docs);
+res.render('user/profile',{data,name,docs});
 //console.log(userrate);
 });
 });
@@ -57,23 +70,20 @@ res.render('user/profile',{data,name,data2});
 
 });
 
+});
 
-/*
-function wait () {
-   if (!done)
-   setTimeout(wait, 1000);
-};
-
-wait();
-*/
 router.get('/signin',urlencodedParser,function(req,res,next){
 res.render('user/signin');
 });
+
 router.post('/signin',urlencodedParser,function(req,res,next){
 var user={
 email: req.body.email,
 password: req.body.password
 };
+mongo.connect(url,function(err, db){
+assert.equal(null, err);
+
 Users.findOne({'email':user.email,'password':user.password},function(err,docs){
     var array_movies=[];
 if(err)
@@ -92,64 +102,20 @@ else if(docs)
     req.session.user=user.email;
     req.session.password=user.password;
     console.log("welcome ",req.session.user);
-    Movies.find(function(err,docs)
-    {
-    if(err)
-    {
-        throw(err);
-    }
-    for (var index = 0;index < docs.length;index++) {
-        array_movies[index] = {
-                description : "blah",
-                title : "title",
-                image : "image path",
-                year : 2017,
-                avg: 0,
-                id: 0 
-            };
-            
-        }
-    for(var c=0;c<docs.length;c++)
-    {
-        array_movies[c].id=docs[c]._id;
-        array_movies[c].title=docs[c].title;
-        array_movies[c].year=docs[c].year;
-        array_movies[c].description=docs[c].description;
-        array_movies[c].image=docs[c].image;
-    }
+    var f1=prep.f2(req,res,next);
+}
+});
+});
+});
 
-    rate.aggregate([        //getting avg rating of eah movie
-        {$group: { _id: "$moviename", avg: { $avg: '$stars' } } }
-        ], function(err, result) {
-            if(err)
-            throw(err);
-        var avg=[];
-        for(var o=0;o<result.length;o++)
-        {
-            for(var m=0;m<docs.length;m++)
-            {
-                if((result[o]._id).toString()==array_movies[m].title)
-                {
-                    //console.log("aaa");
-                    array_movies[m].avg=result[o].avg;
-                    //console.log(array_movies[m].avg);
-                }
-            }
-        }
-        name=req.session.user;
-        res.render('index', {title: 'Imdb',array_movies,name});
-
-});
-});
-};
-});
-});
 router.post('/signup',urlencodedParser,function(req,res,next)
 {
 var user={
 email: req.body.email,
 password: req.body.password
 };
+mongo.connect(url,function(err, db){
+assert.equal(null, err);
 
 Users.findOne({'email':user.email},function(err,docs){  //finding and iserting user if not found
 if(err)
@@ -179,63 +145,11 @@ else
     assert.equal(null, err);
     req.session.user=user.email;
     console.log("Inserted");
-    db.close();
+  //  db.close();
     console.log(req.session.user);
-    Movies.find(function(err,docs)
-    {
-    //console.log(docs);
-    if(err)
-    {
-        throw(err);
-    }
-    for (var index = 0;index < docs.length;index++) {
-        array_movies[index] = {
-                description : "blah",
-                title : "title",
-                image : "image path",
-                year : 2017,
-                avg: 0,
-                id: 0 
-            };
-            
-        }
-    for(var c=0;c<docs.length;c++)
-    {
-        array_movies[c].id=docs[c]._id;
-        array_movies[c].title=docs[c].title;
-        array_movies[c].year=docs[c].year;
-        array_movies[c].description=docs[c].description;
-        array_movies[c].image=docs[c].image;
-    }
-
-    rate.aggregate([        //getting avg rating of eah movie
-        {$group: { _id: "$movieid", avg: { $avg: '$stars' } } }
-        ], function(err, result) {
-            if(err)
-            throw(err);
-        var avg=[];
-        for(var o=0;o<result.length;o++)
-        {
-            for(var m=0;m<docs.length;m++)
-            {
-                //console.log((result[o]._id).toString());
-                //console.log(array_movies[m].id);
-                if((result[o]._id).toString()==array_movies[m].id)
-                {
-                    //console.log("aaa");
-                    array_movies[m].avg=result[o].avg;
-                    //console.log(array_movies[m].avg);
-                }
-            }
-        }
-        });   
-        name=req.session.user;
-        res.render('index', {title: 'Imdb',array_movies,name});
-    });
-    //res.render('user/loggedin',{user});
+    prep.f2(req,res,next);   
 }
 });
 });
 });
-
 module.exports = router;
